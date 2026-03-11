@@ -56,35 +56,35 @@ export default function Footer() {
             </div>
             <div className="flex gap-3 mt-4">
               <a
-                href="https://github.com/votre-username"
+                href="https://github.com/octavelahatra"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-muted-foreground hover:text-primary transition-colors hover:scale-110 transition-transform"
                 aria-label="GitHub"
               >
                 <Github className="w-5 h-5" />
               </a>
               <a
-                href="https://linkedin.com/in/votre-profile"
+                href="https://www.linkedin.com/in/lahatra-octave-razafindrazaka-5b2243285/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-muted-foreground hover:text-primary transition-colors hover:scale-110 transition-transform"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="w-5 h-5" />
               </a>
               <a
-                href="https://facebook.com/votre-profile"
+                href="https://web.facebook.com/lahatra.octave/?locale=fr_FR"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-muted-foreground hover:text-primary transition-colors hover:scale-110 transition-transform"
                 aria-label="Facebook"
               >
                 <Facebook className="w-5 h-5" />
               </a>
               <a
                 href="mailto:octavelahatra@gmail.com"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-muted-foreground hover:text-primary transition-colors hover:scale-110 transition-transform"
                 aria-label="Email"
               >
                 <Mail className="w-5 h-5" />
