@@ -1,162 +1,103 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { useScroll } from "framer-motion"
+import { Mail, MessageCircle } from "lucide-react"
 import { useRef } from "react"
-import { Mail, Phone } from "lucide-react"
+import { AuroraBackground } from "@/components/hero/aurora-background"
+import { HeroVisual } from "@/components/hero/hero-visual"
+import { ScrollIndicator } from "@/components/hero/scroll-indicator"
+import { MagneticButton } from "@/components/motion/magnetic-button"
+import { StaggerGroup, StaggerItem } from "@/components/motion/stagger-group"
+import { TextReveal } from "@/components/motion/text-reveal"
+import { useInViewActive } from "@/hooks/use-in-view-active"
+import { usePointerParallax } from "@/hooks/use-pointer-parallax"
+import { useReducedMotion } from "@/hooks/use-reduced-motion"
 
 export default function Hero() {
-  const ref = useRef<HTMLDivElement>(null)
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8 },
-    },
-  }
+  const sectionRef = useRef<HTMLElement>(null)
+  const reducedMotion = useReducedMotion()
+  const { ref: viewRef, isActive } = useInViewActive<HTMLElement>()
+  const { x: pointerX, y: pointerY } = usePointerParallax(sectionRef, { disabled: reducedMotion })
+  // Drives the 3D scene's subtle scroll-linked spin (tier "full" only) —
+  // progress from the section's top hitting the viewport top to its
+  // bottom doing the same, i.e. 0 while freshly in view, 1 once scrolled past.
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] })
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Animated Background */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 right-20 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-20 left-20 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-float animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-float animation-delay-4000"></div>
+    <section
+      id="home"
+      ref={(node) => {
+        sectionRef.current = node
+        viewRef.current = node
+      }}
+      className="relative flex min-h-[calc(100svh)] items-center overflow-hidden pt-28 pb-20 lg:pt-24"
+    >
+      <AuroraBackground pointerX={pointerX} pointerY={pointerY} reducedMotion={reducedMotion} />
+
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-16 px-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
+        {/* Text column */}
+        <StaggerGroup stagger={0.12} className="order-2 lg:order-1">
+          <StaggerItem className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-1.5 font-mono text-xs uppercase tracking-[0.15em] text-primary">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            Disponible pour de nouveaux projets
+          </StaggerItem>
+
+          <TextReveal
+            text="Razafindrazaka Fitahinasoa Octave"
+            as="h1"
+            delay={0.15}
+            className="font-display text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl"
+          />
+
+          <StaggerItem className="mt-6 max-w-xl text-balance font-mono text-sm uppercase tracking-[0.1em] text-primary/80 sm:text-base">
+            Électronique appliquée · Informatique industrielle · Intelligence artificielle
+          </StaggerItem>
+
+          <StaggerItem className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
+            Je conçois des systèmes qui relient le monde physique et le monde numérique — capteurs, objets connectés
+            et intelligence artificielle — avec la même exigence à chaque étage.
+          </StaggerItem>
+
+          <StaggerItem className="mt-10 flex flex-wrap items-center gap-4">
+            <MagneticButton href="#projects">Voir mes projets</MagneticButton>
+            <MagneticButton href="#contact" variant="secondary">
+              Me contacter
+            </MagneticButton>
+          </StaggerItem>
+
+          <StaggerItem className="mt-10 flex flex-wrap gap-x-8 gap-y-3">
+            <a
+              href="mailto:octavelahatra@gmail.com"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+            >
+              <Mail className="h-4 w-4" aria-hidden="true" />
+              octavelahatra@gmail.com
+            </a>
+            <a
+              href="https://wa.me/261348672838"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+            >
+              <MessageCircle className="h-4 w-4" aria-hidden="true" />
+              +261 34 86 728 38
+            </a>
+          </StaggerItem>
+        </StaggerGroup>
+
+        {/* Visual column */}
+        <div className="order-1 lg:order-2">
+          <HeroVisual
+            pointerX={pointerX}
+            pointerY={pointerY}
+            scrollProgress={scrollYProgress}
+            reducedMotion={reducedMotion}
+            active={isActive}
+          />
+        </div>
       </div>
 
-      <motion.div
-        ref={ref}
-        className="w-full px-6 z-10"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="max-w-6xl mx-auto">
-          {/* Top section - Name with Profile Image */}
-          <motion.div
-            variants={itemVariants}
-            className="mb-8 flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-12"
-          >
-            <div className="flex-1">
-              <motion.h1 
-                className="text-4xl md:text-6xl font-bold gradient-text leading-tight mb-2"
-                whileHover={{ scale: 1.05, x: 10 }}
-                transition={{ duration: 0.3 }}
-              >
-                RAZAFINDRAZAKA
-              </motion.h1>
-              <motion.h1 
-                className="text-4xl md:text-6xl font-bold gradient-text leading-tight"
-                whileHover={{ scale: 1.05, x: 10 }}
-                transition={{ duration: 0.3 }}
-              >
-                Fitahinasoa Lahatra Octave
-              </motion.h1>
-            </div>
-
-            {/* Profile Image with animation */}
-            <motion.div
-              animate={{ y: [0, -20, 0] }}
-              transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY }}
-              className="relative flex-shrink-0"
-            >
-              <motion.img
-                src="/profile.png"
-                alt="RAZAFINDRAZAKA Fitahinasoa Lahatra Octave"
-                className="w-96 h-96 md:w-[500px] md:h-[500px] relative z-10 object-contain"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.3 }}
-              />
-            </motion.div>
-          </motion.div>
-
-          {/* Welcome badge */}
-          <motion.div variants={itemVariants} className="mb-6">
-            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary text-sm font-semibold">
-              ✨ Bienvenue dans mon univers
-            </span>
-          </motion.div>
-
-          {/* Main title */}
-          <motion.h2
-            variants={itemVariants}
-            className="text-4xl md:text-5xl font-bold mb-6 gradient-text leading-tight"
-          >
-            Ingénieur Innovant
-          </motion.h2>
-
-          <motion.p variants={itemVariants} className="text-lg md:text-xl text-muted-foreground mb-4 leading-relaxed">
-            Électronique Appliquée • Informatique Industrielle • Intelligence Artificielle
-          </motion.p>
-
-          <motion.p variants={itemVariants} className="text-muted-foreground mb-8 text-base md:text-lg">
-            Je transforme des idées en solutions innovantes. Spécialisé en systèmes embarqués, applications web et
-            vision par ordinateur.
-          </motion.p>
-
-          <motion.div variants={itemVariants} className="mb-8 flex flex-col gap-3">
-            <div className="flex items-center gap-3">
-              <Mail className="w-5 h-5 text-primary" />
-              <a
-                href="mailto:octavelahatra@gmail.com"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                octavelahatra@gmail.com
-              </a>
-            </div>
-            <div className="flex items-center gap-3">
-              <Phone className="w-5 h-5 text-primary" />
-              <a
-                href="https://wa.me/261348672838"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                +261 34 86 728 38 (WhatsApp)
-              </a>
-            </div>
-          </motion.div>
-
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
-            <motion.a
-              href="#projects"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-lg font-semibold hover:shadow-lg hover:shadow-primary/50 transition-all text-center"
-            >
-              Voir mes projets
-            </motion.a>
-            <motion.a
-              href="#contact"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 border-2 border-primary text-primary rounded-lg font-semibold hover:bg-primary/10 transition-all text-center"
-            >
-              Me contacter
-            </motion.a>
-          </motion.div>
-
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-            className="mt-16 flex justify-center"
-          >
-            <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
-          </motion.div>
-        </div>
-      </motion.div>
+      <ScrollIndicator reducedMotion={reducedMotion} />
     </section>
   )
 }

@@ -1,11 +1,18 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { PageTransition } from "@/components/motion/page-transition"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display-raw",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
   title: "Portfolio | Ingénieur Électronique & IA",
@@ -20,8 +27,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={`font-sans antialiased bg-background text-foreground`}>
-        {children}
+      <body className={`${spaceGrotesk.variable} font-sans antialiased bg-background text-foreground`}>
+        <PageTransition>{children}</PageTransition>
         <Analytics />
       </body>
     </html>
